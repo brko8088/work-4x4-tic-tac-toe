@@ -1,10 +1,3 @@
-let emptyBoard = [
-  ['', '', '', ''], 
-  ['', '', '', ''], 
-  ['', '', '', ''], 
-  ['', '', '', '']
-];
-
 export class TicTacToe {
   public board: string[][];
 
@@ -44,49 +37,51 @@ export class TicTacToe {
   }
 
   public anyMovesLeft(board: string[][]): boolean { 
+    let horizontalCheck = false;
+    let verticalCheck = false;
+    let diagonalCheck = false;
+    let squareCheck = false;
+    
     for (let i = 0; i < 4; i++) {
       // Horizontal Check
-      if (board[i][0] !== '' ||  board[i][1] === '' || board[i][2] === '' || board[i][3] === '') {
-        return true;
-      }
+      horizontalCheck = this.anyMovesLeftForWin(board[i])
 
       // Vertical Check
-      if (board[0][i] === '' ||  board[1][i] === '' || board[2][i] === '' || board[3][i] === '') {
-        return true;
-      }
+      verticalCheck = this.anyMovesLeftForWin([board[0][i], board[1][i], board[2][i], board[3][i]])
 
       // Diagonal Check
-      if (i == 0 && board[0][0] === '' || board[1][1] === '' || board[2][2] === '' || board[3][3] === '') {
-        return true;
+      if (i == 0 || i == 3) {
+        diagonalCheck = this.anyMovesLeftForWin([board[0][0], board[1][1], board[2][2], board[3][3]])
       }
-
+      
       // 2x2 check
       if (i < 3) {
         for (let j = 0; j < 3; j++) {
-          if (board[i][j] === '' || board[i][j + 1] === '' || board[i + 1][j] === '' || board[i + 1][j + 1] === '') {
-            return true;
-          }
+          squareCheck = this.anyMovesLeftForWin([board[i][j], board[i][j + 1], board[i + 1][j], board[i + 1][j + 1]])
         }
       }
     }
 
-    return false;
+    return horizontalCheck || verticalCheck || diagonalCheck || squareCheck;
   }
 
-  public anyMovesLeftForWin(characterToFind: string, characters: string[]): boolean {
+  public anyMovesLeftForWin(characters: string[]): boolean {
     let emptySpaceFound = false;
+    let characterToFind = '';
 
     for (let i = 0; i < characters.length; i++) {
       if (characters[i] === '') {
         emptySpaceFound = true;
-      }
-
-      if (characters[i] !== characterToFind) {
-        return true;
+      } else {
+        if (characterToFind === '') {
+          characterToFind = characters[i];
+        } else if (characters[i] !== characterToFind) {
+          return false;
+        }
       }
     }
 
-    return emptySpaceFound;
+    return characterToFind === '' ? true : emptySpaceFound && characterToFind !== '';
   }
 
   public isGameOver(board: string[][]): boolean { 
