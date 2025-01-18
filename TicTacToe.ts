@@ -105,7 +105,7 @@ export class TicTacToe {
   }
 
   public isGameOver(board: string[][]): boolean { 
-    if (this.checkWinner(board)[0] === 'no' || !this.anyMovesLeft(board)) {
+    if (this.checkWinner(board)[0] === 'win' || !this.anyMovesLeft(board)) {
       return true;
     } else {
       return false;

@@ -269,7 +269,7 @@ describe('Test gameOver Method', () => {
 
   it('Game Over - All Four Corners Win', () => {
     const game = new TicTacToe();
-    expect(game.isGameOver(boardCornersWin)).toBe(false);
+    expect(game.isGameOver(boardCornersWin)).toBe(true);
   });
 
   it('Game Over - 2x2 Win', () => {
