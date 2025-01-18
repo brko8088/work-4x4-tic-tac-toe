@@ -2,6 +2,8 @@ import { TicTacToe } from './TicTacToe';
 import { 
   boardHorizontalWin, 
   boardVerticalWin, 
+  boardDiagonalWinOne,
+  boardDiagonalWinTwo,
   boardCornersWin, 
   boardSquareWin, 
   emptyBoard, 
@@ -10,8 +12,6 @@ import {
   movesLeftOne, 
   movesLeftTwo, 
   movesLeftThree, 
-  boardDiagonalWinOne,
-  boardDiagonalWinTwo,
   movesLeftFour,
   movesLeftFive,
   movesLeftSix,
@@ -19,7 +19,7 @@ import {
   movesLeftEight
 } from './Boards';
 
-describe('Test Check Winner Method', () => {
+describe('Test checkWinner Method', () => {
   it('Horizontal Win', () => {
     const game = new TicTacToe();
     let result = game.checkWinner(boardHorizontalWin);
@@ -159,58 +159,176 @@ describe('Test Check Winner Method', () => {
   });
 });
 
-describe('Test No Moves Left', () => {
-  it('There are no moves left', () => {
+describe('Test anyMovesLeft Method', () => {
+  it('No Moves Left - Winning Board 1', () => {
+    const game = new TicTacToe();
+    expect(game.anyMovesLeft(boardHorizontalWin)).toBe(false);
+  });
+  
+  it('No Moves Left - Winning Board 2', () => {
+    const game = new TicTacToe();
+    expect(game.anyMovesLeft(boardVerticalWin)).toBe(false);
+  });
+  
+  it('No Moves Left - Winning Board 3', () => {
+    const game = new TicTacToe();
+    expect(game.anyMovesLeft(boardDiagonalWinOne)).toBe(false);
+  });
+
+  it('No Moves Left - Winning Board 4', () => {
+    const game = new TicTacToe();
+    expect(game.anyMovesLeft(boardDiagonalWinTwo)).toBe(false);
+  });
+
+  it('No Moves Left - Winning Board 5', () => {
+    const game = new TicTacToe();
+    expect(game.anyMovesLeft(boardCornersWin)).toBe(false);
+  });
+
+  it('No Moves Left - Winning Board 6', () => {
+    const game = new TicTacToe();
+    expect(game.anyMovesLeft(boardSquareWin)).toBe(false);
+  });
+
+  it('No moves left - No Winner 1', () => {
     const game = new TicTacToe();
     expect(game.anyMovesLeft(noMovesLeftOne)).toBe(false);
   });
 
-  it('There are no moves left', () => {
+  it('No moves left - No Winner 2', () => {
     const game = new TicTacToe();
     expect(game.anyMovesLeft(noMovesLeftTwo)).toBe(false);
   });
-});
 
-describe('Test Moves Left', () => {
-  it('There are moves left', () => {
+  it('There are Moves left - Empty Board', () => {
     const game = new TicTacToe();
     expect(game.anyMovesLeft(emptyBoard)).toBe(true);
   });
 
-  it('There are moves left', () => {
+  it('There are Moves left 1', () => {
     const game = new TicTacToe();
     expect(game.anyMovesLeft(movesLeftOne)).toBe(true);
   });
 
-  it('There are moves left', () => {
+  it('There are Moves left 2', () => {
     const game = new TicTacToe();
     expect(game.anyMovesLeft(movesLeftTwo)).toBe(true);
   });
 
-  it('There are moves left', () => {
+  it('There are Moves left 3', () => {
     const game = new TicTacToe();
     expect(game.anyMovesLeft(movesLeftThree)).toBe(true);
   });
+
+  it ('There are Moves Left 4', () => {
+    const game = new TicTacToe();
+    expect(game.anyMovesLeft(movesLeftFour)).toBe(true);
+  });
+
+  it ('There are Moves Left 5', () => {
+    const game = new TicTacToe();
+    expect(game.anyMovesLeft(movesLeftFive)).toBe(true);
+  });
+
+  it ('There are Moves Left 6', () => {
+    const game = new TicTacToe();
+    expect(game.anyMovesLeft(movesLeftSix)).toBe(true);
+  });
+
+  it ('There are Moves Left 7', () => {
+    const game = new TicTacToe();
+    expect(game.anyMovesLeft(movesLeftSeven)).toBe(true);
+  });
+
+  it ('There are Moves Left 8', () => {
+    const game = new TicTacToe();
+    expect(game.anyMovesLeft(movesLeftEight)).toBe(true);
+  });
 });
 
-describe('Test Game Over solutions', () => {
-  it('Horizontal Win', () => {
+describe('Test gameOver Method', () => {
+  it('Game Over - Horizontal Win', () => {
     const game = new TicTacToe();
     expect(game.isGameOver(boardHorizontalWin)).toBe(true);
   });
 
-  it('Vertical Win', () => {
+  it('Game Over - Vertical Win', () => {
     const game = new TicTacToe();
     expect(game.isGameOver(boardVerticalWin)).toBe(true);
   });
 
-  it('Diagonal Win', () => {
+  it('Game Over - Diagonal Win 1', () => {
     const game = new TicTacToe();
     expect(game.isGameOver(boardDiagonalWinOne)).toBe(true);
   });
 
-  it('2x2 Win', () => {
+  it('Game Over - Diagonal Win 2', () => {
+    const game = new TicTacToe();
+    expect(game.isGameOver(boardDiagonalWinTwo)).toBe(true);
+  });
+
+  it('Game Over - All Four Corners Win', () => {
+    const game = new TicTacToe();
+    expect(game.isGameOver(boardCornersWin)).toBe(false);
+  });
+
+  it('Game Over - 2x2 Win', () => {
     const game = new TicTacToe();
     expect(game.isGameOver(boardSquareWin)).toBe(true);
+  });
+
+  it('Game Over - No moves left - No Winner 1', () => {
+    const game = new TicTacToe();
+    expect(game.isGameOver(noMovesLeftOne)).toBe(true);
+  });
+
+  it('Game Over - No moves left - No Winner 2', () => {
+    const game = new TicTacToe();
+    expect(game.isGameOver(noMovesLeftTwo)).toBe(true);
+  });
+
+  it('No Game Over - Empty Board', () => {
+    const game = new TicTacToe();
+    expect(game.isGameOver(emptyBoard)).toBe(false);
+  });
+
+  it('No Game Over - There are Moves left 1', () => {
+    const game = new TicTacToe();
+    expect(game.isGameOver(movesLeftOne)).toBe(false);
+  });
+
+  it('No Game Over - There are Moves left 2', () => {
+    const game = new TicTacToe();
+    expect(game.isGameOver(movesLeftTwo)).toBe(false);
+  });
+
+  it('No Game Over - There are Moves left 3', () => {
+    const game = new TicTacToe();
+    expect(game.isGameOver(movesLeftThree)).toBe(false);
+  });
+
+  it ('No Game Over - There are Moves Left 4', () => {
+    const game = new TicTacToe();
+    expect(game.isGameOver(movesLeftFour)).toBe(false);
+  });
+
+  it ('No Game Over - There are Moves Left 5', () => {
+    const game = new TicTacToe();
+    expect(game.isGameOver(movesLeftFive)).toBe(false);
+  });
+
+  it ('No Game Over - There are Moves Left 6', () => {
+    const game = new TicTacToe();
+    expect(game.isGameOver(movesLeftSix)).toBe(false);
+  });
+
+  it ('No Game Over - There are Moves Left 7', () => {
+    const game = new TicTacToe();
+    expect(game.isGameOver(movesLeftSeven)).toBe(false);
+  });
+
+  it ('No Game Over - There are Moves Left 8', () => {
+    const game = new TicTacToe();
+    expect(game.isGameOver(movesLeftEight)).toBe(false);
   });
 });

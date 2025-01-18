@@ -48,36 +48,41 @@ export class TicTacToe {
   }
 
   public anyMovesLeft(board: string[][]): boolean { 
-    if (this.checkWinner(board)[0] === 'no') {
+    let areThereMovesLeft = false;
+
+    if (this.checkWinner(board)[0] === 'win') {
       return false;
     }
-
-    let horizontalCheck = false;
-    let verticalCheck = false;
-    let diagonalCheck = false;
-    let squareCheck = false;
     
     for (let i = 0; i < 4; i++) {
       // Horizontal Check
-      horizontalCheck = this.anyMovesLeftForWin(board[i])
+      areThereMovesLeft = this.anyMovesLeftForWin(board[i]) || areThereMovesLeft;
 
       // Vertical Check
-      verticalCheck = this.anyMovesLeftForWin([board[0][i], board[1][i], board[2][i], board[3][i]])
+      areThereMovesLeft = this.anyMovesLeftForWin([board[0][i], board[1][i], board[2][i], board[3][i]]) || areThereMovesLeft;
 
-      // Diagonal Check
-      if (i == 0 || i == 3) {
-        diagonalCheck = this.anyMovesLeftForWin([board[0][0], board[1][1], board[2][2], board[3][3]])
+      // Diagonal Check with nested four corners check
+      if (i === 0) {
+        // Diagonal Check from 0,0
+        areThereMovesLeft = this.anyMovesLeftForWin([board[0][0], board[1][1], board[2][2], board[3][3]]) || areThereMovesLeft;
+        // All Four Corners Check
+        areThereMovesLeft = this.anyMovesLeftForWin([board[0][0], board[0][3], board[3][0], board[3][3]]) || areThereMovesLeft;
+      }
+
+      // Diagonal Check from 3,0
+      if (i === 3) {
+        areThereMovesLeft = this.anyMovesLeftForWin([board[3][0], board[2][1], board[1][2], board[0][3]]) || areThereMovesLeft;
       }
       
       // 2x2 check
       if (i < 3) {
         for (let j = 0; j < 3; j++) {
-          squareCheck = this.anyMovesLeftForWin([board[i][j], board[i][j + 1], board[i + 1][j], board[i + 1][j + 1]])
+          areThereMovesLeft = this.anyMovesLeftForWin([board[i][j], board[i][j + 1], board[i + 1][j], board[i + 1][j + 1]]) || areThereMovesLeft
         }
       }
     }
 
-    return horizontalCheck || verticalCheck || diagonalCheck || squareCheck;
+    return areThereMovesLeft;
   }
 
   public anyMovesLeftForWin(characters: string[]): boolean {
@@ -100,7 +105,7 @@ export class TicTacToe {
   }
 
   public isGameOver(board: string[][]): boolean { 
-    if (this.checkWinner(board)[0] !== 'no' || !this.anyMovesLeft(board)) {
+    if (this.checkWinner(board)[0] === 'no' || !this.anyMovesLeft(board)) {
       return true;
     } else {
       return false;
