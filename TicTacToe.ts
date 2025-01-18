@@ -49,10 +49,6 @@ export class TicTacToe {
 
   public anyMovesLeft(board: string[][]): boolean { 
     let areThereMovesLeft = false;
-
-    if (this.checkWinner(board)[0] === 'win') {
-      return false;
-    }
     
     for (let i = 0; i < 4; i++) {
       // Horizontal Check
