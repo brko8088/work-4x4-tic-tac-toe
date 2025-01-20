@@ -48,6 +48,10 @@ export class TicTacToe {
   }
 
   public anyMovesLeft(board: string[][]): boolean { 
+    if (this.checkWinner(board)[0] === 'win') {
+      return false;
+    }
+
     let areThereMovesLeft = false;
     
     for (let i = 0; i < 4; i++) {
