@@ -95,19 +95,6 @@ export class TicTacToe {
     }
   }
 
-  public winCheck(type: string, characters: string[]): Result {
-    if (characters[0] !== ' ' && 
-        characters[0] === characters[1] && 
-        characters[0] === characters[2] && 
-        characters[0] === characters[3]) {
-      this.result.win = true;
-      this.result.type = type;
-      this.result.character = characters[0];
-    }
-
-    return this.result
-  }
-
   public anyMovesLeft(): boolean { 
     if (this.checkWinner().win) {
       return false;
@@ -167,40 +154,50 @@ export class TicTacToe {
     return areThereMovesLeft;
   }
 
-  // Determines if a possible win is still possible for a given set of characters
-  // return false if any played character does not match each other
+  // Helper method used to determine if a win has occurred
+  public winCheck(type: string, characters: string[]): Result {
+    if (characters[0] !== ' ' && 
+        characters[0] === characters[1] && 
+        characters[0] === characters[2] && 
+        characters[0] === characters[3]) {
+      this.result.win = true;
+      this.result.type = type;
+      this.result.character = characters[0];
+    }
+
+    return this.result
+  }
+
+  // Helper Method to determine if a winning solution hasn't been blocked
+  // returns false if any played character does not match the rest of the non-empty characters
   public checkMovesLeftForWin(characters: string[]): boolean {
-    let emptySpaceFound = false;
     let characterToFind = ' ';
 
     for (let i = 0; i < characters.length; i++) {
-      if (characters[i] === ' ') {
-        emptySpaceFound = true;
-      } else {
-        if (characterToFind === ' ') {
-          characterToFind = characters[i];
-        } else if (characters[i] !== characterToFind) {
-          return false;
-        }
+      if (characterToFind === ' ' && characters[i] !== ' ') {
+        characterToFind = characters[i];
+      } else if (characters[i] !== characterToFind) {
+        return false;
       }
     }
 
-    return characterToFind === ' ' ? true : emptySpaceFound && characterToFind !== ' ';
+    return true;
   }
   
-  public anyMovesLeftRegardlessOfDraw(): boolean { 
-    if (this.checkWinner().win) {
-      return false;
-    }
+  // Old method to determine if there are any moves left regardless of winning solution being blocked
+  // public anyMovesLeftRegardlessOfDraw(): boolean { 
+  //   if (this.checkWinner().win) {
+  //     return false;
+  //   }
     
-    for (let i = 0; i < 4; i++) {
-      for (let j = 0; j < 3; j++) {
-        if (this.board[i][j] === ' ') {
-          return true
-        }
-      }
-    }
+  //   for (let i = 0; i < 4; i++) {
+  //     for (let j = 0; j < 3; j++) {
+  //       if (this.board[i][j] === ' ') {
+  //         return true
+  //       }
+  //     }
+  //   }
 
-    return false;
-  }
+  //   return false;
+  // }
 }
