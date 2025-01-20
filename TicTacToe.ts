@@ -98,11 +98,7 @@ export class TicTacToe {
   }
 
   public isGameOver(): boolean {
-    if (this.checkWinner()[0] === "win" || !this.anyMovesLeft()) {
-      return true;
-    } else {
-      return false;
-    }
+    return !this.anyMovesLeft();
   }
 
   public anyMovesLeft(): boolean {
@@ -194,7 +190,13 @@ export class TicTacToe {
     for (let i = 0; i < characters.length; i++) {
       if (characterToFind === " " && characters[i] !== " ") {
         characterToFind = characters[i];
-      } else if (characters[i] !== characterToFind) {
+      }
+
+      if (
+        characterToFind !== " " &&
+        characters[i] !== " " &&
+        characters[i] !== characterToFind
+      ) {
         return false;
       }
     }
