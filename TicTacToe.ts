@@ -5,7 +5,11 @@ export class TicTacToe {
   * Check if there is a winner
   * @param board: string[][]
   * @return string[]
-  * @return 'no' if there is no winner
+  * @return ['win', 'horizontal', 'x'] 
+  *   first string determines a win
+  *   second string determines the win type (horizontal, vertical, diagonal, corners, 2x2)
+  *   third string determines the winner character
+  * @return ['no', 'no', 'no'] if there is no winner
   */
   public checkWinner(board: string[][]): string[] { 
     for (let i = 0; i < 4; i++) {
