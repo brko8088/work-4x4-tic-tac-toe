@@ -1,58 +1,74 @@
+import { emptyBoard } from "./Boards";
+
+type Result = {
+  win: boolean; // true or false
+  type: string; // horizontal, vertical, diagonal, corners, 2x2, draw
+  character: string; // x or o
+}
+
 export class TicTacToe {
   public board: string[][];
+  public result: Result ;
+
+  // Constructor
+  constructor(board?: string[][]) {
+    this.board = board ? board : emptyBoard
+    this.result = {
+      win: false,
+      type: '',
+      character: ''
+    }
+  }
 
   /*
   * Check if there is a winner
-  * @param board: string[][]
-  * @return string[]
-  * @return ['win', 'horizontal', 'x'] 
-  *   first string determines a win
-  *   second string determines the win type (horizontal, vertical, diagonal, corners, 2x2)
-  *   third string determines the winner character
-  * @return ['no', 'no', 'no'] if there is no winner
   */
-  public checkWinner(board: string[][]): string[] { 
+  public checkWinner(): Result { 
     for (let i = 0; i < 4; i++) {
-      // Horizontal Check
-      if (board[i][0] !== " " && board[i][0] === board[i][1] && board[i][0] === board[i][2] && board[i][0] === board[i][3]) {
-        return ['win', 'horizontal', board[i][0]];
+      // Horizontal Win
+      if (this.winCheck("horizontal", this.board[i]).win) {
+        return this.result;
       }
 
-      // Vertical Check
-      if (board[0][i] !== " " && board[0][i] === board[1][i] && board[0][i] === board[2][i] && board[0][i] === board[3][i]) {
-        return ['win', 'vertical', board[0][i]];
+      // Vertical Win
+      if (this.winCheck("vertical", [this.board[0][i], this.board[1][i], this.board[2][i], this.board[3][i]]).win) {
+        return this.result;
       }
 
-      // Diagonal Check at 0,0
-      if (i == 0 && board[i][i] !== " " && board[i][i] === board[1][1] && board[i][i] === board[2][2] && board[i][i] === board[3][3]) {
-        return ['win', 'diagonal', board[0][0]];
-      }
-
-      // Diagonal Check at 3,0
-      if (i == 3 && board[i][0] !== " " && board[i][0] === board[2][1] && board[i][0] === board[1][2] && board[i][0] === board[0][3]) {
-        return ['win', 'diagonal', board[0][3]];
-      }
-
-      // All four corners win
-      if (i == 0 && board[i][i] !== " " && board[i][i] === board[i][3] && board[i][i] === board[3][i] && board[i][i] === board[3][3]) {
-        return ['win', 'corners', board[0][0]];
-      }
-
-      // 2x2 check
+      // 2x2 Win
       if (i < 3) {
         for (let j = 0; j < 3; j++) {
-          if (board[i][j] !== " " && board[i][j] === board[i][j + 1] && board[i][j] === board[i + 1][j] && board[i][j] === board[i + 1][j + 1]) {
-            return ['win', '2x2', board[i][j]];
+          if (this.winCheck("2x2", [
+                this.board[i][j], 
+                this.board[i][j + 1], 
+                this.board[i + 1][j], 
+                this.board[i + 1][j + 1]
+              ]).win) {
+            return this.result;
           }
         }
       }
     }
+    
+    // Diagonal Wins
+    if (this.winCheck("diagonal", [this.board[0][0], this.board[1][1], this.board[2][2], this.board[3][3]]).win) {
+      return this.result;
+    }
 
-    return ['no','no','no'];
+    if (this.winCheck("diagonal", [this.board[3][0], this.board[2][1], this.board[1][2], this.board[0][3]]).win) {
+      return this.result;
+    }
+
+    // All four corners win
+    if (this.winCheck("corners", [this.board[0][0], this.board[0][3], this.board[3][0], this.board[3][3]]).win) {
+      return this.result;
+    }
+
+    return this.result;
   }
 
-  public anyMovesLeft(board: string[][]): boolean { 
-    if (this.checkWinner(board)[0] === 'win') {
+  public anyMovesLeft(): boolean { 
+    if (this.checkWinner().win) {
       return false;
     }
 
@@ -60,33 +76,51 @@ export class TicTacToe {
     
     for (let i = 0; i < 4; i++) {
       // Horizontal Check
-      areThereMovesLeft = this.anyMovesLeftForWin(board[i]) || areThereMovesLeft;
+      areThereMovesLeft = this.anyMovesLeftForWin(this.board[i]) || areThereMovesLeft;
 
       // Vertical Check
-      areThereMovesLeft = this.anyMovesLeftForWin([board[0][i], board[1][i], board[2][i], board[3][i]]) || areThereMovesLeft;
+      areThereMovesLeft = this.anyMovesLeftForWin([this.board[0][i], this.board[1][i], this.board[2][i], this.board[3][i]]) || areThereMovesLeft;
 
       // Diagonal Check with nested four corners check
       if (i === 0) {
         // Diagonal Check from 0,0
-        areThereMovesLeft = this.anyMovesLeftForWin([board[0][0], board[1][1], board[2][2], board[3][3]]) || areThereMovesLeft;
+        areThereMovesLeft = this.anyMovesLeftForWin([this.board[0][0], this.board[1][1], this.board[2][2], this.board[3][3]]) || areThereMovesLeft;
         // All Four Corners Check
-        areThereMovesLeft = this.anyMovesLeftForWin([board[0][0], board[0][3], board[3][0], board[3][3]]) || areThereMovesLeft;
+        areThereMovesLeft = this.anyMovesLeftForWin([this.board[0][0], this.board[0][3], this.board[3][0], this.board[3][3]]) || areThereMovesLeft;
       }
 
       // Diagonal Check from 3,0
       if (i === 3) {
-        areThereMovesLeft = this.anyMovesLeftForWin([board[3][0], board[2][1], board[1][2], board[0][3]]) || areThereMovesLeft;
+        areThereMovesLeft = this.anyMovesLeftForWin([this.board[3][0], this.board[2][1], this.board[1][2], this.board[0][3]]) || areThereMovesLeft;
       }
       
       // 2x2 check
       if (i < 3) {
         for (let j = 0; j < 3; j++) {
-          areThereMovesLeft = this.anyMovesLeftForWin([board[i][j], board[i][j + 1], board[i + 1][j], board[i + 1][j + 1]]) || areThereMovesLeft
+          areThereMovesLeft = this.anyMovesLeftForWin([this.board[i][j], this.board[i][j + 1], this.board[i + 1][j], this.board[i + 1][j + 1]]) || areThereMovesLeft
         }
       }
     }
 
     return areThereMovesLeft;
+  }
+
+  public isGameOver(): boolean { 
+    if (this.checkWinner()[0] === 'win' || !this.anyMovesLeft()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public winCheck(type: string, characters: string[]): Result {
+    if (characters[0] !== ' ' && characters[0] === characters[1] && characters[0] === characters[2] && characters[0] === characters[3]) {
+      this.result.win = true;
+      this.result.type = type;
+      this.result.character = characters[0];
+    }
+
+    return this.result
   }
 
   public anyMovesLeftForWin(characters: string[]): boolean {
@@ -106,14 +140,6 @@ export class TicTacToe {
     }
 
     return characterToFind === ' ' ? true : emptySpaceFound && characterToFind !== ' ';
-  }
-
-  public isGameOver(board: string[][]): boolean { 
-    if (this.checkWinner(board)[0] === 'win' || !this.anyMovesLeft(board)) {
-      return true;
-    } else {
-      return false;
-    }
   }
 }
 
