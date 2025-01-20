@@ -2,7 +2,7 @@ import { emptyBoard } from "./Boards";
 
 type Result = {
   win: boolean; // true or false
-  type: string; // horizontal, vertical, diagonal, corners, 2x2, draw
+  type: string; // horizontal, vertical, diagonal, corners, 2x2
   character: string; // x or o
 };
 
