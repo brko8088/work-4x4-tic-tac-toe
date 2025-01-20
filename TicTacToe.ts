@@ -202,7 +202,8 @@ export class TicTacToe {
     return true;
   }
 
-  // Old method to determine if there are any moves left regardless of winning solution being blocked
+  // Alternative method that determined if there are any moves left regardless of a winning solution being blocked
+  // Returns true while there are still empty spaces, false when no more spaces are empty
   // public anyMovesLeftRegardlessOfDraw(): boolean {
   //   if (this.checkWinner().win) {
   //     return false;
